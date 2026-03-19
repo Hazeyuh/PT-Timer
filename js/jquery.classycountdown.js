@@ -90,6 +90,7 @@
             doResponsive();
         }
         function prepare() {
+            var gaugeSize = Math.max(220, Math.floor(element.width() || 600));
             element.append(
                 '<div class="ClassyCountdown-wrapper">' +
                 '<input type="text" />' +
@@ -99,8 +100,8 @@
           
             element.find('.ClassyCountdown-wrapper > div').attr("style", settings.style.element);
             element.find('.ClassyCountdown-wrapper input').knob($.extend({
-                width: '600',
-                height: '600',
+                width: gaugeSize,
+                height: gaugeSize,
                 displayInput: false,
                 readOnly: true,
                 max: 100

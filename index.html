@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT TIMER</title>
 
     <link rel="stylesheet" type="text/css" href="css/default.css">
@@ -13,17 +13,181 @@
     <script src="js/jquery.knob.js"></script>
     <script src="js/jquery.throttle.js"></script>
     <script src="js/jquery.classycountdown.js"></script>
+    <script src="title.js"></script>
     <!--classycountdown.js为可修改的自定义脚本-->
 
     <link rel="stylesheet" type="text/css" href="css/jquery.classycountdown.css" />
 
     <style>
+        :root {
+            --text-color: #3a4f66;
+            --panel-bg: #ffffff;
+            --border: #cad2dd;
+            --shadow: 0 8px 24px rgba(58, 79, 102, 0.08);
+            --timer-size: clamp(320px, 52vh, 560px);
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .app {
+            min-height: 100vh;
+            padding: 12px 20px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .main-panel {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 140px minmax(420px, 1fr) 300px;
+            gap: 16px;
+            align-items: center;
+        }
+
+        #output {
+            color: var(--text-color);
+            font-size: var(--title-size, 56px);
+            line-height: 1;
+            letter-spacing: 0.06em;
+            user-select: none;
+            display: grid;
+            grid-auto-flow: column;
+            grid-template-rows: repeat(var(--title-rows, 6), 1fr);
+            justify-content: center;
+            align-content: center;
+            justify-items: center;
+            align-items: center;
+            column-gap: 0.12em;
+            row-gap: 0.02em;
+            min-height: 0;
+        }
+
+        #output .title-char {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1em;
+        }
+
+        .timer-panel {
+            width: min(var(--timer-size), 100%);
+            margin: 0 auto;
+        }
+
         .ClassyCountdownDemo {
-            margin: 0 auto 30px auto;
-            max-width: 800px;
-            width: calc(100%);
-            padding: 30px;
-            display: block
+            margin: 0;
+            width: 100%;
+            height: var(--timer-size);
+            padding: 0;
+            display: block;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        #countdown1 .ClassyCountdown-wrapper {
+            width: 100% !important;
+            height: 100% !important;
+            position: relative;
+        }
+
+        #countdown1 .ClassyCountdown-wrapper>div {
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #countdown1 .ClassyCountdown-wrapper .ClassyCountdown-time {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+        }
+
+        #countdown1 .ClassyCountdown-wrapper .ClassyCountdown-minutes {
+            left: 0;
+            top: auto;
+            bottom: 10%;
+            text-align: center;
+        }
+
+        .right-panel {
+            align-self: stretch;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        .logo-wrap {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .logo-wrap img {
+            width: min(150px, 100%);
+            height: auto;
+            object-fit: contain;
+        }
+
+        .manual-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .manual-panel input,
+        .manual-panel button {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #8d99a8;
+            border-radius: 6px;
+            font-size: 18px;
+            color: #394c61;
+            background: #fff;
+        }
+
+        .manual-panel button {
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .manual-panel button:hover {
+            background: #eef3f8;
+        }
+
+        .stages {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(92px, 1fr));
+            gap: 8px;
+        }
+
+        .stage-btn {
+            min-height: 58px;
+            border: 1px solid #8d99a8;
+            border-radius: 6px;
+            background: #fff;
+            color: #1f2f42;
+            font-size: 16px;
+            line-height: 1.25;
+            padding: 5px 7px;
+            cursor: pointer;
+        }
+
+        .stage-btn:hover {
+            background: #eef3f8;
         }
 
         #countdown2 {
@@ -61,6 +225,68 @@
         #countdown10 {
             background: #3498db
         }
+
+        @media (max-width: 1200px) {
+            :root {
+                --timer-size: clamp(300px, 48vh, 500px);
+            }
+
+            .main-panel {
+                grid-template-columns: 96px minmax(340px, 1fr) 250px;
+            }
+        }
+
+        @media (max-width: 980px) {
+            :root {
+                --timer-size: min(74vw, 470px);
+            }
+
+            .main-panel {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                gap: 14px;
+            }
+
+            #output {
+                font-size: var(--title-size, 46px);
+            }
+
+            .right-panel {
+                width: min(680px, 100%);
+            }
+
+            .logo-wrap {
+                justify-content: center;
+            }
+
+            .stages {
+                grid-template-columns: repeat(4, minmax(80px, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .app {
+                padding: 12px;
+            }
+
+            :root {
+                --timer-size: min(86vw, 360px);
+            }
+
+            .manual-panel input,
+            .manual-panel button {
+                font-size: 16px;
+            }
+
+            .stage-btn {
+                font-size: 15px;
+                min-height: 60px;
+            }
+
+            .stages {
+                grid-template-columns: repeat(2, minmax(100px, 1fr));
+            }
+        }
     </style>
     <!--[if IE]>
 <script src="http://libs.baidu.com/html5shiv/3.7/html5shiv.min.js"></script>
@@ -68,38 +294,46 @@
 </head>
 
 <body>
-    <script src="/demos/googlegg.js"></script>
+    <div class="app">
+        <section class="main-panel">
+            <div id="output" data-title-file="title.txt"></div>
 
+            <div class="timer-panel">
+                <div id="countdown1" class="ClassyCountdownDemo"></div>
+            </div>
 
-    <div id="countdown1" class="ClassyCountdownDemo"></div>
-    <div id="output" style="width:1px; height:1px;position:absolute;left:5%;top:12%;font-size:100px;">
-        第<br>一<br>次<br>交<br>流<br>赛
+            <aside class="right-panel">
+                <div class="logo-wrap">
+                    <img src="NJU.png" alt="Nanjing University" width="178" height="224" />
+                </div>
+                <div class="manual-panel">
+                    <input type="number" name="minutes" id="min" placeholder="分" />
+                    <input type="number" name="seconds" id="sec" placeholder="秒" />
+                    <button id="start">start</button>
+                    <button id="pause">pause</button>
+                    <button id="recover">recover</button>
+                    <button id="next">next</button>
+                </div>
+            </aside>
+        </section>
+
+        <section class="stages">
+            <button id="bt1" class="stage-btn">选题环节(1')</button>
+            <button id="bt2" class="stage-btn">正方准备(2')</button>
+            <button id="bt3" class="stage-btn">正方报告(12')</button>
+            <button id="bt4" class="stage-btn">反方提问(2')</button>
+            <button id="bt5" class="stage-btn">反方准备(2')</button>
+            <button id="bt6" class="stage-btn">反方报告(3')</button>
+            <button id="bt7" class="stage-btn">正反方讨论(10')</button>
+            <button id="bt8" class="stage-btn">评论方提问(3')</button>
+            <button id="bt9" class="stage-btn">评论方准备(2')</button>
+            <button id="bt10" class="stage-btn">评论方报告(4')</button>
+            <button id="bt11" class="stage-btn">正方总结(1')</button>
+            <button id="bt12" class="stage-btn">评分(2')</button>
+            <button id="bt13" class="stage-btn">裁判点评(5')</button>
+        </section>
     </div>
 
-    <input type="number" name="minutes" id="min" placeholder="分"
-        style="width:4%; height:5.4%;position:absolute;top:65%;right:33%;" />
-    <input type="number" name="seconds" id="sec" placeholder="秒"
-        style="width:4%; height:5.4%;position:absolute;top:65%;right:25%;" />
-
-    <button id="bt1" style="width:4%; height:5.4%;position:absolute;bottom:15%;left:15%;">选题环节(1')</button>
-    <button id="bt2" style="width:4%; height:5.4%;position:absolute;bottom:15%;left:20%;">正方准备(2')</button>
-    <button id="bt3" style="width:4%; height:5.4%;position:absolute;bottom:15%;left:25%;">正方报告(12')</button>
-    <button id="bt4" style="width:4%; height:5.4%;position:absolute;bottom:15%;left:30%;">反方提问(2')</button>
-    <button id="bt5" style="width:4%; height:5.4%;position:absolute;bottom:15%;left:35%;">反方准备(2')</button>
-    <button id="bt6" style="width:4%; height:5.4%;position:absolute;bottom:15%;left:40%;">反方报告(3')</button>
-    <button id="bt7" style="width:4.5%; height:5.4%;position:absolute;bottom:15%;left:45%;">正反方讨论(10')</button>
-    <button id="bt8" style="width:4%; height:5.4%;position:absolute;bottom:5%;left:15%;">评论方提问(3')</button>
-    <button id="bt9" style="width:4%; height:5.4%;position:absolute;bottom:5%;left:20%;">评论方准备(2')</button>
-    <button id="bt10" style="width:4%; height:5.4%;position:absolute;bottom:5%;left:25%;">评论方报告(4')</button>
-    <button id="bt11" style="width:4%; height:5.4%;position:absolute;bottom:5%;left:30%;">正方总结(1')</button>
-    <button id="bt12" style="width:4%; height:5.4%;position:absolute;bottom:5%;left:35%;">评分(2')</button>
-    <button id="bt13" style="width:4%; height:5.4%;position:absolute;bottom:5%;left:40%;">裁判点评(5')</button>
-
-    <button id="start" style="width:4%; height:5.4%;position:absolute;top:72%;right:33%;">start</button>
-    <button id="pause" style="width:4%; height:5.4%;position:absolute;top:72%;right:25%;">pause</button>
-    <button id="recover" style="width:4%; height:5.4%;position:absolute;top:80%;right:33%;">recover</button>
-    <button id="next" style="width:4%; height:5.4%;position:absolute;top:80%;right:25%;">next</button>
-    <img src="NJU.png" width="178.4" height="223.6" style="position:absolute;top:2%;right:2%;" />
     <audio src="song.mp3" id="audio"></audio>
 
 
@@ -115,6 +349,51 @@
         var interval
         var items = true
         var num = 0
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function setOutputText(rawText) {
+            var output = document.getElementById("output");
+            if (!output) {
+                return;
+            }
+
+            var text = (rawText || "").toString().replace(/\r/g, "").replace(/\n+/g, "").replace(/<[^>]+>/g, "").trim();
+            if (!text) {
+                text = "计时";
+            }
+
+            var chars = Array.from(text);
+            var length = chars.length;
+            var columns = 1;
+
+            if (length > 18) {
+                columns = 3;
+            } else if (length > 12) {
+                columns = 2;
+            }
+
+            var rows = Math.max(1, Math.ceil(length / columns));
+            var fontSize = Math.max(20, Math.min(72, Math.floor(88 / columns)));
+
+            output.style.setProperty("--title-rows", rows.toString());
+            output.style.setProperty("--title-size", fontSize + "px");
+            output.innerHTML = chars.map(function (char) {
+                return '<span class="title-char">' + escapeHtml(char) + '</span>';
+            }).join("");
+        }
+
+        function loadInitialTitle() {
+            var text = window.APP_TITLE_TEXT || "交流赛";
+            setOutputText(text);
+        }
 
         function single() {
             $('#countdown1').ClassyCountdown({
@@ -132,6 +411,7 @@
         single()
 
         $(document).ready(function () {
+            loadInitialTitle();
 
             $("#bt1").click(function () {
                 items = true
@@ -145,7 +425,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "选题环节";
+                setOutputText("选题环节");
             });
 
             $("#bt2").click(function () {
@@ -160,7 +440,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "正方准备";
+                setOutputText("正方准备");
             });
             $("#bt3").click(function () {
                 items = true
@@ -174,7 +454,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "正方报告";
+                setOutputText("正方报告");
             });
             $("#bt4").click(function () {
                 items = true
@@ -189,7 +469,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "反方提问";
+                setOutputText("反方提问");
             });
             $("#bt5").click(function () {
                 items = true
@@ -203,7 +483,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "反方准备";
+                setOutputText("反方准备");
             });
             $("#bt6").click(function () {
                 items = true
@@ -217,7 +497,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "反方报告";
+                setOutputText("反方报告");
             });
             $("#bt7").click(function () {
                 items = true
@@ -233,7 +513,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "正反方讨论";
+                setOutputText("正反方讨论");
             });
 
             $("#bt8").click(function () {
@@ -248,7 +528,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "评论方提问";
+                setOutputText("评论方提问");
             });
             $("#bt9").click(function () {
                 items = true
@@ -262,7 +542,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "评论方准备";
+                setOutputText("评论方准备");
             });
             $("#bt10").click(function () {
                 items = true
@@ -276,7 +556,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "评论方报告";
+                setOutputText("评论方报告");
             });
             $("#bt11").click(function () {
                 items = true
@@ -291,7 +571,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "正方总结";
+                setOutputText("正方总结");
             });
 
             $("#bt12").click(function () {
@@ -306,7 +586,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "<br/>评 分 ";
+                setOutputText("评分");
             });
             $("#bt13").click(function () {
                 items = true
@@ -320,7 +600,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "裁判点评";
+                setOutputText("裁判点评");
             });
             $("#recover").click(function () {
                 items = true
@@ -335,43 +615,43 @@
 
                 switch (recover_num) {
                     case 1:
-                        document.getElementById("output").innerHTML = "选题环节";
+                        setOutputText("选题环节");
                         break;
                     case 2:
-                        document.getElementById("output").innerHTML = "正方准备";
+                        setOutputText("正方准备");
                         break;
                     case 3:
-                        document.getElementById("output").innerHTML = "正方报告";
+                        setOutputText("正方报告");
                         break;
                     case 4:
-                        document.getElementById("output").innerHTML = "反方提问";
+                        setOutputText("反方提问");
                         break;
                     case 5:
-                        document.getElementById("output").innerHTML = "反方准备";
+                        setOutputText("反方准备");
                         break;
                     case 6:
-                        document.getElementById("output").innerHTML = "反方报告";
+                        setOutputText("反方报告");
                         break;
                     case 7:
-                        document.getElementById("output").innerHTML = "正反方讨论";
+                        setOutputText("正反方讨论");
                         break;
                     case 8:
-                        document.getElementById("output").innerHTML = "评论方提问";
+                        setOutputText("评论方提问");
                         break;
                     case 9:
-                        document.getElementById("output").innerHTML = "评论方准备";
+                        setOutputText("评论方准备");
                         break;
                     case 10:
-                        document.getElementById("output").innerHTML = "评论方报告";
+                        setOutputText("评论方报告");
                         break;
                     case 11:
-                        document.getElementById("output").innerHTML = "正方总结";
+                        setOutputText("正方总结");
                         break;
                     case 12:
-                        document.getElementById("output").innerHTML = "<br/>评 分 ";
+                        setOutputText("评分");
                         break;
                     case 13:
-                        document.getElementById("output").innerHTML = "裁判点评";
+                        setOutputText("裁判点评");
                         break;
                 }
             });
@@ -385,7 +665,7 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                document.getElementById("output").innerHTML = "手动模式";
+                setOutputText("手动模式");
             });
             $("#pause").click(function () {
 

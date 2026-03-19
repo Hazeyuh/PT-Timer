@@ -12,8 +12,8 @@
     display: inline-block;
     position: absolute;
     width: 100%;
-    top: 10%;
-    left:18%
+    top: 0;
+    left: 0;
 }
 
 .ClassyCountdown-wrapper .ClassyCountdown-minutes {
@@ -29,8 +29,9 @@
     width: 100%;
     line-height: 1em;
     position: absolute;
-    top: 40%;
+    top: 50%;
+    transform: translateY(-50%);
     text-align: center;
-    left: 20%;
+    left: 0;
     display: block;
 }
