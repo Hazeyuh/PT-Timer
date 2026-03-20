@@ -20,74 +20,276 @@
 
     <style>
         :root {
-            --text-color: #3a4f66;
-            --panel-bg: #ffffff;
-            --border: #cad2dd;
-            --shadow: 0 8px 24px rgba(58, 79, 102, 0.08);
-            --timer-size: clamp(320px, 52vh, 560px);
+            --bg: #f6f2eb;
+            --bg-soft: #efe7dd;
+            --panel: #fbf8f2;
+            --line: #d2c2ae;
+            --line-strong: #a68a6a;
+            --text-main: #2e261f;
+            --text-soft: #6f5a48;
+            --accent: #c07f45;
+            --accent-deep: #9a6031;
+            --panel-edge: rgba(166, 138, 106, 0.52);
+            --panel-shadow: 0 10px 24px rgba(86, 64, 46, 0.11);
+            --timer-size: clamp(460px, 68vh, 760px);
+            --main-height: 60vh;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
         }
 
         body {
-            margin: 0;
-            min-height: 100vh;
-            overflow-y: auto;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 38%),
+                radial-gradient(circle at 85% 8%, rgba(228, 207, 181, 0.5), rgba(228, 207, 181, 0) 42%),
+                linear-gradient(135deg, #f9f5ef 0%, #f3ede4 46%, #eee4d7 100%);
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: "Trebuchet MS", "Segoe UI", "Arial Black", sans-serif;
+            font-weight: 800 !important;
+            letter-spacing: 0.02em;
         }
 
         .app {
-            min-height: 100vh;
-            padding: 12px 20px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            height: calc(100vh - 20px);
+            display: grid;
+            grid-template-rows: 20vh 60vh 20vh;
+            gap: 0;
+            padding: clamp(10px, 1.4vw, 16px);
+            position: relative;
+            margin-bottom: 20px;
         }
 
-        .main-panel {
-            flex: 1;
+        .corner-logo {
+            position: absolute;
+            top: 10px;
+            right: clamp(12px, 1.4vw, 20px);
+            z-index: 6;
+            width: min(306px, 22.5vw);
+            pointer-events: none;
+        }
+
+        .corner-logo img {
+            width: 100%;
+            height: min(clamp(80px, 14vh, 150px), calc(20vh - 20px));
+            object-fit: contain;
+            object-position: right top;
+        }
+
+        .title-section {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 10px 0;
             min-height: 0;
-            display: grid;
-            grid-template-columns: 140px minmax(420px, 1fr) 300px;
-            gap: 16px;
+            overflow: hidden;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: stretch;
+            gap: clamp(8px, 1vw, 14px);
+            max-width: calc(100% - min(270px, 20vw));
+            flex-wrap: nowrap;
+            min-width: 0;
+        }
+
+        .title-frame {
+            width: fit-content;
+            max-width: 58vw;
+            border-radius: 22px;
+            border: 2px solid var(--line-strong);
+            background:
+                linear-gradient(130deg, rgba(255, 255, 255, 0.85), rgba(251, 243, 233, 0.9)),
+                repeating-linear-gradient(-45deg, rgba(166, 138, 106, 0.06), rgba(166, 138, 106, 0.06) 8px, rgba(255, 255, 255, 0) 8px, rgba(255, 255, 255, 0) 18px);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                0 12px 30px rgba(82, 61, 43, 0.14);
+            padding: clamp(14px, 1.7vw, 20px) clamp(16px, 2vw, 28px);
+            display: flex;
             align-items: center;
+            justify-content: center;
+            gap: 0;
+            flex-wrap: nowrap;
+            min-height: clamp(80px, 14vh, 150px);
         }
 
         #output {
-            color: var(--text-color);
-            font-size: var(--title-size, 56px);
-            line-height: 1;
-            letter-spacing: 0.06em;
+            color: var(--text-main);
             user-select: none;
-            display: grid;
-            grid-auto-flow: column;
-            grid-template-rows: repeat(var(--title-rows, 6), 1fr);
-            justify-content: center;
-            align-content: center;
-            justify-items: center;
-            align-items: center;
-            column-gap: 0.12em;
-            row-gap: 0.02em;
-            min-height: 0;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            text-transform: uppercase;
+            font-size: clamp(42px, 5.8vw, 96px);
+            text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
+            padding: 0 clamp(10px, 1.2vw, 18px);
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        #output .title-char {
-            display: inline-flex;
+        .top-section-frame {
+            max-width: 30vw;
+            min-height: clamp(80px, 14vh, 150px);
+            padding: clamp(14px, 1.7vw, 20px) clamp(16px, 2vw, 28px);
+            border-radius: 22px;
+            border: 2px solid var(--line-strong);
+            background: linear-gradient(130deg, rgba(255, 255, 255, 0.85), rgba(251, 243, 233, 0.9));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 12px 30px rgba(82, 61, 43, 0.14);
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 1em;
+            white-space: nowrap;
+            min-width: 0;
+        }
+
+        #top-section-name {
+            font-size: clamp(42px, 5.8vw, 96px);
+            line-height: 1;
+            text-transform: uppercase;
+            padding: 0 clamp(10px, 1.2vw, 18px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #edit-title-btn {
+            border: 2px solid var(--line-strong);
+            border-radius: 16px;
+            background: #e2c9aa;
+            color: var(--text-main);
+            cursor: pointer;
+            text-transform: none;
+            padding: 8px 6px;
+            width: clamp(56px, 4.6vw, 76px);
+            min-height: clamp(80px, 14vh, 150px);
+            font-size: clamp(18px, 1.65vw, 26px);
+            line-height: 1;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 0.03em;
+            box-shadow: 0 3px 0 rgba(130, 98, 67, 0.45);
+            transition: transform 0.14s ease, box-shadow 0.14s ease;
+        }
+
+        #edit-title-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 0 rgba(130, 98, 67, 0.45);
+        }
+
+        .main-panel {
+            min-height: 0;
+            height: 100%;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(340px, 1.28fr) 16px minmax(240px, 0.9fr) 16px minmax(290px, 1fr);
+            gap: clamp(8px, 1vw, 14px);
+            align-items: stretch;
+        }
+
+        .zone {
+            position: relative;
+            min-width: 0;
+            border-radius: 20px;
+            background:
+                radial-gradient(circle at 12% 14%, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0) 44%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(246, 236, 224, 0.9));
+            border: 1px solid var(--panel-edge);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74), var(--panel-shadow);
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .zone-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid rgba(166, 138, 106, 0.36);
+            padding: 0 12px;
+            min-height: 0;
+            height: 15%;
+            flex: 0 0 15%;
+        }
+
+        .zone-header-label {
+            font-size: clamp(24px, 2.4vw, 40px);
+            color: var(--text-soft);
+            text-transform: uppercase;
+            line-height: 1;
+            opacity: 0.95;
+            text-align: center;
+            width: 100%;
+        }
+
+        .zone-inner {
+            height: 100%;
+            min-height: 0;
+            flex: 1 1 auto;
+        }
+
+        .zone-dial {
+            display: grid;
+            grid-template-rows: 1fr;
+            grid-template-columns: clamp(64px, 15%, 130px) 1fr;
+            align-items: center;
+            gap: 0;
+        }
+
+        .zone-dial .zone-header {
+            height: 100%;
+            flex: none;
+            border-bottom: none;
+            border-right: 1px solid rgba(166, 138, 106, 0.36);
+            padding: 0 0 0 clamp(2px, 0.4vw, 8px);
+            justify-content: flex-start;
+        }
+
+        .zone-dial .zone-header-label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: clamp(38px, 5.1vw, 86px);
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: auto;
+            opacity: 0.98;
+        }
+
+        .dial-side-name {
+            margin-left: clamp(0px, 0.2vw, 4px);
+            letter-spacing: 0;
         }
 
         .timer-panel {
-            width: min(var(--timer-size), 100%);
-            margin: 0 auto;
+            width: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: clamp(2px, 0.4vw, 8px);
         }
 
         .ClassyCountdownDemo {
+            width: min(100%, 70%);
+            max-width: 100%;
+            height: min(70%, var(--timer-size));
+            aspect-ratio: 1 / 1;
             margin: 0;
-            width: 100%;
-            height: var(--timer-size);
             padding: 0;
-            display: block;
-            border-radius: 18px;
+            border-radius: 20px;
             overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, rgba(231, 210, 184, 0.25), rgba(231, 210, 184, 0) 70%);
         }
 
         #countdown1 .ClassyCountdown-wrapper {
@@ -103,188 +305,335 @@
             height: 100%;
         }
 
-        #countdown1 .ClassyCountdown-wrapper .ClassyCountdown-time {
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            text-align: center;
+        #countdown1 .ClassyCountdown-wrapper .ClassyCountdown-time,
+        #countdown1 .ClassyCountdown-wrapper .ClassyCountdown-minutes {
+            display: none !important;
         }
 
-        #countdown1 .ClassyCountdown-wrapper .ClassyCountdown-minutes {
-            left: 0;
-            top: auto;
-            bottom: 10%;
+        .zone-time {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: clamp(7px, 1.2vh, 12px);
+            padding: clamp(8px, 1vw, 12px) clamp(16px, 2vw, 24px);
             text-align: center;
+            background:
+                radial-gradient(circle at 18% 20%, rgba(216, 184, 147, 0.26), rgba(216, 184, 147, 0) 45%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(247, 239, 229, 0.78));
+        }
+
+        .time-left-label {
+            color: var(--text-soft);
+            font-size: clamp(32px, 3.1vw, 52px);
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+        #time-left-value {
+            color: var(--text-main);
+            font-size: clamp(54px, min(7.2vw, 11.6vh), 144px);
+            line-height: 0.95;
+            text-transform: uppercase;
+            white-space: nowrap;
+            text-shadow: 0 2px 0 rgba(255, 255, 255, 0.9);
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: clip;
+        }
+
+        #time-pause-btn {
+            min-width: clamp(120px, 12vw, 190px);
+            height: clamp(42px, 5.4vh, 56px);
+            border-radius: 12px;
+            border: 1px solid var(--line-strong);
+            background: #e4caaa;
+            color: var(--text-main);
+            font-size: clamp(19px, 1.8vw, 30px);
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 0 rgba(130, 98, 67, 0.45);
+        }
+
+        #time-pause-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .v-separator {
+            align-self: stretch;
+            width: 100%;
+            border-radius: 999px;
+            background:
+                linear-gradient(180deg, rgba(127, 97, 69, 0) 0%, rgba(127, 97, 69, 0.78) 14%, rgba(127, 97, 69, 0.78) 86%, rgba(127, 97, 69, 0) 100%),
+                repeating-linear-gradient(180deg, rgba(242, 229, 212, 0.8), rgba(242, 229, 212, 0.8) 5px, rgba(217, 197, 171, 0.82) 5px, rgba(217, 197, 171, 0.82) 10px);
+            box-shadow: 0 0 0 1px rgba(166, 138, 106, 0.28);
         }
 
         .right-panel {
-            align-self: stretch;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            justify-content: flex-start;
             align-items: stretch;
-        }
-
-        .logo-wrap {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .logo-wrap img {
-            width: min(150px, 100%);
-            height: auto;
-            object-fit: contain;
+            justify-content: center;
+            gap: clamp(8px, 1.2vh, 12px);
+            padding: clamp(10px, 1.2vw, 14px);
+            background:
+                radial-gradient(circle at 78% 14%, rgba(209, 171, 129, 0.23), rgba(209, 171, 129, 0) 40%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(247, 239, 229, 0.78));
         }
 
         .manual-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
-            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 100%;
+            border-radius: 14px;
+            border: 1px solid var(--line-strong);
+            background: #f3e4d2;
+            box-shadow: 0 8px 20px rgba(98, 72, 49, 0.16);
+            padding: clamp(10px, 1vw, 14px);
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(6px, 0.8vw, 10px);
         }
 
         .manual-panel input,
         .manual-panel button {
             width: 100%;
-            height: 40px;
-            border: 1px solid #8d99a8;
-            border-radius: 6px;
-            font-size: 18px;
-            color: #394c61;
-            background: #fff;
+            height: clamp(68px, 10.5vh, 124px);
+            aspect-ratio: 1 / 1;
+            border-radius: 10px;
+            border: 1px solid #b4916f;
+            color: var(--text-main);
+            background: #fffaf3;
+            font-size: clamp(23px, 2.6vw, 38px);
+            text-align: center;
+            text-transform: uppercase;
+            line-height: 0.9;
+        }
+
+        .manual-panel input[type="number"] {
+            padding-right: 0.22em;
+        }
+
+        .manual-panel input[type="number"]::-webkit-outer-spin-button,
+        .manual-panel input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: inner-spin-button;
+            opacity: 1;
+            height: 100%;
+            width: 1.42em;
+            margin: 0;
+            transform: scale(1.28);
+            transform-origin: center;
         }
 
         .manual-panel button {
-            font-size: 18px;
             cursor: pointer;
+            background: #e6cda9;
         }
 
         .manual-panel button:hover {
-            background: #eef3f8;
+            background: #ddb98f;
         }
 
         .stages {
+            min-height: 0;
+            height: 100%;
+            overflow: hidden;
             display: grid;
-            grid-template-columns: repeat(7, minmax(92px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(7, minmax(130px, 1fr));
+            gap: clamp(6px, 0.8vw, 10px);
+            align-items: stretch;
+            padding-top: clamp(8px, 1vh, 12px);
+            padding-bottom: clamp(8px, 1vh, 12px);
+            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(245, 233, 217, 0.56));
+            border: 1px solid rgba(166, 138, 106, 0.34);
         }
 
         .stage-btn {
-            min-height: 58px;
-            border: 1px solid #8d99a8;
-            border-radius: 6px;
-            background: #fff;
-            color: #1f2f42;
-            font-size: 16px;
-            line-height: 1.25;
-            padding: 5px 7px;
+            position: relative;
+            min-height: 0;
+            height: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--line-strong);
+            background: #e6d0b2;
+            color: var(--text-main);
+            font-size: clamp(18px, 3.5vh, 34px);
+            line-height: 0.85;
+            text-align: center;
+            padding: 8px 10px;
             cursor: pointer;
+            box-shadow: 0 3px 8px rgba(95, 71, 49, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .stage-btn::after {
+            content: "";
+            position: absolute;
+            top: 16%;
+            right: -8px;
+            width: 2px;
+            height: 68%;
+            border-radius: 99px;
+            background: linear-gradient(180deg, rgba(127, 97, 69, 0), rgba(127, 97, 69, 0.95) 20%, rgba(127, 97, 69, 0.95) 80%, rgba(127, 97, 69, 0));
+        }
+
+        .stages .stage-btn:last-child::after {
+            display: none;
         }
 
         .stage-btn:hover {
-            background: #eef3f8;
+            transform: translateY(-1px);
+            background: #dfc39f;
         }
 
-        #countdown2 {
-            background: #FFF
-        }
-
-        #countdown3 {
-            background: rgb(52, 73, 94)
-        }
-
-        #countdown4 {
-            background: #222
-        }
-
-        #countdown5 {
-            background: #222
-        }
-
-        #countdown6 {
-            background: #222
-        }
-
-        #countdown7 {
-            background: #222
-        }
-
-        #countdown8 {
-            background: #222
-        }
-
-        #countdown9 {
-            background: #FFF
-        }
-
-        #countdown10 {
-            background: #3498db
-        }
-
-        @media (max-width: 1200px) {
+        @media (max-width: 1420px) {
             :root {
-                --timer-size: clamp(300px, 48vh, 500px);
+                --timer-size: clamp(330px, 52vh, 560px);
             }
 
             .main-panel {
-                grid-template-columns: 96px minmax(340px, 1fr) 250px;
+                grid-template-columns: minmax(320px, 1.2fr) 14px minmax(220px, 0.86fr) 14px minmax(260px, 0.95fr);
+            }
+
+            .title-row {
+                max-width: calc(100% - min(220px, 18vw));
+            }
+
+            .stages {
+                grid-template-columns: repeat(5, minmax(120px, 1fr));
             }
         }
 
-        @media (max-width: 980px) {
-            :root {
-                --timer-size: min(74vw, 470px);
-            }
-
+        @media (max-width: 1080px) {
             .main-panel {
                 grid-template-columns: 1fr;
-                justify-items: center;
-                gap: 14px;
+                gap: 12px;
             }
 
-            #output {
-                font-size: var(--title-size, 46px);
+            .app {
+                height: auto;
+                min-height: 100vh;
+                grid-template-rows: auto auto auto;
+                margin-bottom: 20px;
             }
 
-            .right-panel {
-                width: min(680px, 100%);
+            body {
+                overflow-y: auto;
             }
 
-            .logo-wrap {
+            .corner-logo {
+                position: static;
+                width: min(306px, 67.5vw);
+                margin: 0 auto;
+                pointer-events: auto;
+            }
+
+            .corner-logo img {
+                height: min(clamp(88px, 12vh, 130px), calc(20vh - 20px));
+                object-position: center top;
+            }
+
+            .title-frame {
+                width: fit-content;
+            }
+
+            .title-row {
+                max-width: 100%;
+                flex-wrap: wrap;
+            }
+
+            #edit-title-btn {
+                writing-mode: horizontal-tb;
+                text-orientation: mixed;
+                width: auto;
+                min-height: 44px;
+                padding: 8px 14px;
+                border-radius: 12px;
+                letter-spacing: 0.03em;
+                font-size: clamp(14px, 2vw, 18px);
+            }
+
+            .v-separator {
+                width: 100%;
+                height: 12px;
+                background:
+                    linear-gradient(90deg, rgba(127, 97, 69, 0) 0%, rgba(127, 97, 69, 0.9) 10%, rgba(127, 97, 69, 0.9) 90%, rgba(127, 97, 69, 0) 100%),
+                    repeating-linear-gradient(90deg, rgba(242, 229, 212, 0.9), rgba(242, 229, 212, 0.9) 6px, rgba(217, 197, 171, 0.9) 6px, rgba(217, 197, 171, 0.9) 12px);
+            }
+
+            .timer-panel {
+                width: min(95vw, 540px);
+            }
+
+            .zone-dial {
+                grid-template-columns: 1fr;
+                grid-template-rows: 15% 85%;
+            }
+
+            .zone-dial .zone-header {
+                justify-content: center;
+                border-right: none;
+                border-bottom: 1px solid rgba(166, 138, 106, 0.36);
+                padding: 0 8px;
+            }
+
+            .zone-dial .zone-header-label {
+                writing-mode: horizontal-tb;
+                font-size: clamp(18px, 4vw, 26px);
+                width: 100%;
                 justify-content: center;
             }
 
+            #time-left-value {
+                font-size: clamp(56px, 13vw, 128px);
+            }
+
+            .right-panel {
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .manual-panel {
+                max-width: 440px;
+                margin: 0 auto;
+            }
+
             .stages {
-                grid-template-columns: repeat(4, minmax(80px, 1fr));
+                grid-template-columns: repeat(4, minmax(120px, 1fr));
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 700px) {
             .app {
-                padding: 12px;
+                padding: 10px;
             }
 
-            :root {
-                --timer-size: min(86vw, 360px);
+            .title-frame {
+                border-radius: 16px;
             }
 
-            .manual-panel input,
-            .manual-panel button {
-                font-size: 16px;
+            .zone-header-label {
+                font-size: clamp(18px, 4vw, 26px);
             }
 
-            .stage-btn {
-                font-size: 15px;
-                min-height: 60px;
+            #output {
+                font-size: clamp(30px, 9vw, 56px);
+                white-space: normal;
+            }
+
+            .manual-panel {
+                grid-template-columns: 1fr;
             }
 
             .stages {
-                grid-template-columns: repeat(2, minmax(100px, 1fr));
+                grid-template-columns: repeat(2, minmax(130px, 1fr));
+            }
+
+            .stage-btn::after {
+                display: none;
             }
         }
     </style>
@@ -295,24 +644,54 @@
 
 <body>
     <div class="app">
-        <section class="main-panel">
-            <div id="output" data-title-file="title.txt"></div>
+        <div class="corner-logo">
+            <img src="NJU.png" alt="NANJING UNIVERSITY" width="178" height="224" />
+        </div>
 
-            <div class="timer-panel">
-                <div id="countdown1" class="ClassyCountdownDemo"></div>
+        <header class="title-section">
+            <div class="title-row">
+                <button id="edit-title-btn" type="button">修改标题</button>
+                <div class="title-frame">
+                    <div id="output" data-title-file="title.txt"></div>
+                </div>
+                <div class="top-section-frame">
+                    <div id="top-section-name" class="sector-name">READY</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="main-panel">
+            <div class="zone zone-dial">
+                <div class="zone-header">
+                    <span class="zone-header-label sector-name dial-side-name">READY</span>
+                </div>
+                <div class="zone-inner timer-panel">
+                    <div id="countdown1" class="ClassyCountdownDemo" aria-label="Main Countdown Dial"></div>
+                </div>
             </div>
 
-            <aside class="right-panel">
-                <div class="logo-wrap">
-                    <img src="NJU.png" alt="Nanjing University" width="178" height="224" />
+            <div class="v-separator" aria-hidden="true"></div>
+
+            <div class="zone zone-time">
+                <div class="zone-inner zone-time">
+                    <div class="time-left-label">TIME LEFT</div>
+                    <div id="time-left-value">00 : 00</div>
+                    <button id="time-pause-btn" type="button">PAUSE</button>
                 </div>
-                <div class="manual-panel">
-                    <input type="number" name="minutes" id="min" placeholder="分" />
-                    <input type="number" name="seconds" id="sec" placeholder="秒" />
-                    <button id="start">start</button>
-                    <button id="pause">pause</button>
-                    <button id="recover">recover</button>
-                    <button id="next">next</button>
+            </div>
+
+            <div class="v-separator" aria-hidden="true"></div>
+
+            <aside class="zone zone-extra">
+                <div class="zone-inner right-panel">
+                    <div class="manual-panel">
+                        <input type="number" name="minutes" id="min" placeholder="MIN" />
+                        <input type="number" name="seconds" id="sec" placeholder="SEC" />
+                        <button id="start">START</button>
+                        <button id="pause">PAUSE</button>
+                        <button id="recover">RECOVER</button>
+                        <button id="next">NEXT</button>
+                    </div>
                 </div>
             </aside>
         </section>
@@ -349,15 +728,7 @@
         var interval
         var items = true
         var num = 0
-
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/\"/g, "&quot;")
-                .replace(/'/g, "&#39;");
-        }
+        var timerBaseColor = "#b98756"
 
         function setOutputText(rawText) {
             var output = document.getElementById("output");
@@ -367,37 +738,106 @@
 
             var text = (rawText || "").toString().replace(/\r/g, "").replace(/\n+/g, "").replace(/<[^>]+>/g, "").trim();
             if (!text) {
-                text = "计时";
+                text = "CUPT交流赛";
             }
 
-            var chars = Array.from(text);
-            var length = chars.length;
-            var columns = 1;
-
-            if (length > 18) {
-                columns = 3;
-            } else if (length > 12) {
-                columns = 2;
-            }
-
-            var rows = Math.max(1, Math.ceil(length / columns));
-            var fontSize = Math.max(20, Math.min(72, Math.floor(88 / columns)));
-
-            output.style.setProperty("--title-rows", rows.toString());
-            output.style.setProperty("--title-size", fontSize + "px");
-            output.innerHTML = chars.map(function (char) {
-                return '<span class="title-char">' + escapeHtml(char) + '</span>';
-            }).join("");
+            output.textContent = text;
+            applyTitleScale(text);
         }
 
         function loadInitialTitle() {
-            var text = window.APP_TITLE_TEXT || "交流赛";
+            var text = window.APP_TITLE_TEXT || "CUPT交流赛";
             setOutputText(text);
         }
 
+        function applyTitleScale(text) {
+            var output = document.getElementById("output");
+            if (!output) {
+                return;
+            }
+
+            var length = Array.from(text || "").length;
+            var estimate = 104 - Math.max(0, length - 6) * 3;
+            var viewportLimit = Math.max(34, Math.floor(window.innerWidth * 0.076));
+            var size = Math.max(30, Math.min(estimate, viewportLimit));
+            output.style.fontSize = size + "px";
+            var topName = document.getElementById("top-section-name");
+            if (topName) {
+                topName.style.fontSize = size + "px";
+            }
+        }
+
+        function updateTimeLeftDisplay(totalSeconds) {
+            var valueNode = document.getElementById("time-left-value");
+            if (!valueNode) {
+                return;
+            }
+
+            var safeValue = Math.max(0, Number(totalSeconds) || 0);
+            var minutes = Math.floor(safeValue / 60);
+            var seconds = safeValue % 60;
+            valueNode.textContent = (minutes < 10 ? "0" + minutes : minutes) + " : " + (seconds < 10 ? "0" + seconds : seconds);
+        }
+
+        function setSectorName(rawText) {
+            var text = (rawText || "").toString().replace(/\r/g, "").replace(/\n+/g, "").replace(/<[^>]+>/g, "").trim();
+            if (!text) {
+                text = "准备阶段";
+            }
+            $(".sector-name").text(text);
+        }
+
+        function setPauseButtonState() {
+            var label = items ? "PAUSE" : "START";
+            $("#pause").text(label);
+            $("#time-pause-btn").text(label);
+        }
+
+        function togglePauseState() {
+            if (items) {
+                clearInterval(interval);
+                items = false;
+            } else {
+                interval = setInterval('single()', 1000);
+                items = true;
+            }
+            setPauseButtonState();
+        }
+
+        function applyGaugeBaseColor() {
+            $('#countdown1 .ClassyCountdown-wrapper input').trigger('configure', {
+                fgColor: timerBaseColor
+            });
+        }
+
+        function syncDialSizeToContainer() {
+            var dialContainer = document.getElementById("countdown1");
+            if (!dialContainer) {
+                return;
+            }
+            var side = Math.max(220, Math.floor(Math.min(dialContainer.clientWidth, dialContainer.clientHeight)));
+            $('#countdown1 .ClassyCountdown-wrapper input').trigger('configure', {
+                width: side,
+                height: side
+            }).trigger('change');
+        }
+
         function single() {
+            updateTimeLeftDisplay(time);
             $('#countdown1').ClassyCountdown({
                 theme: "theme1",
+                style: {
+                    element: '',
+                    textResponsive: 2,
+                    seconds: {
+                        gauge: {
+                            thickness: 1,
+                            bgColor: "rgba(118,88,60,0.18)",
+                            fgColor: timerBaseColor
+                        },
+                        textCSS: 'font-family:\'Trebuchet MS\';font-weight:800;color:#7b6046;'
+                    }
+                },
                 end: time
             }, flag, totaltime)
             time--;
@@ -412,6 +852,25 @@
 
         $(document).ready(function () {
             loadInitialTitle();
+            updateTimeLeftDisplay(0);
+            setSectorName("准备阶段");
+            setPauseButtonState();
+
+            $(window).on("resize", function () {
+                var output = document.getElementById("output");
+                if (output) {
+                    applyTitleScale(output.textContent || "");
+                }
+                syncDialSizeToContainer();
+            });
+
+            $("#edit-title-btn").click(function () {
+                var currentTitle = $("#output").text().trim() || "CUPT交流赛";
+                var changed = window.prompt("请输入新的比赛标题", currentTitle);
+                if (changed !== null) {
+                    setOutputText(changed);
+                }
+            });
 
             $("#bt1").click(function () {
                 items = true
@@ -425,7 +884,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("选题环节");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("选题环节");
+                setPauseButtonState();
             });
 
             $("#bt2").click(function () {
@@ -440,7 +902,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("正方准备");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("正方准备");
+                setPauseButtonState();
             });
             $("#bt3").click(function () {
                 items = true
@@ -454,7 +919,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("正方报告");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("正方报告");
+                setPauseButtonState();
             });
             $("#bt4").click(function () {
                 items = true
@@ -469,7 +937,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("反方提问");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("反方提问");
+                setPauseButtonState();
             });
             $("#bt5").click(function () {
                 items = true
@@ -483,7 +954,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("反方准备");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("反方准备");
+                setPauseButtonState();
             });
             $("#bt6").click(function () {
                 items = true
@@ -497,7 +971,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("反方报告");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("反方报告");
+                setPauseButtonState();
             });
             $("#bt7").click(function () {
                 items = true
@@ -513,7 +990,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("正反方讨论");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("正反方讨论");
+                setPauseButtonState();
             });
 
             $("#bt8").click(function () {
@@ -528,7 +1008,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("评论方提问");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("评论方提问");
+                setPauseButtonState();
             });
             $("#bt9").click(function () {
                 items = true
@@ -542,7 +1025,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("评论方准备");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("评论方准备");
+                setPauseButtonState();
             });
             $("#bt10").click(function () {
                 items = true
@@ -556,7 +1042,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("评论方报告");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("评论方报告");
+                setPauseButtonState();
             });
             $("#bt11").click(function () {
                 items = true
@@ -571,7 +1060,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("正方总结");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("正方总结");
+                setPauseButtonState();
             });
 
             $("#bt12").click(function () {
@@ -586,7 +1078,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("评分");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("评分");
+                setPauseButtonState();
             });
             $("#bt13").click(function () {
                 items = true
@@ -600,7 +1095,10 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("裁判点评");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("裁判点评");
+                setPauseButtonState();
             });
             $("#recover").click(function () {
                 items = true
@@ -612,46 +1110,49 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setPauseButtonState();
 
                 switch (recover_num) {
                     case 1:
-                        setOutputText("选题环节");
+                        setSectorName("选题环节");
                         break;
                     case 2:
-                        setOutputText("正方准备");
+                        setSectorName("正方准备");
                         break;
                     case 3:
-                        setOutputText("正方报告");
+                        setSectorName("正方报告");
                         break;
                     case 4:
-                        setOutputText("反方提问");
+                        setSectorName("反方提问");
                         break;
                     case 5:
-                        setOutputText("反方准备");
+                        setSectorName("反方准备");
                         break;
                     case 6:
-                        setOutputText("反方报告");
+                        setSectorName("反方报告");
                         break;
                     case 7:
-                        setOutputText("正反方讨论");
+                        setSectorName("正反方讨论");
                         break;
                     case 8:
-                        setOutputText("评论方提问");
+                        setSectorName("评论方提问");
                         break;
                     case 9:
-                        setOutputText("评论方准备");
+                        setSectorName("评论方准备");
                         break;
                     case 10:
-                        setOutputText("评论方报告");
+                        setSectorName("评论方报告");
                         break;
                     case 11:
-                        setOutputText("正方总结");
+                        setSectorName("正方总结");
                         break;
                     case 12:
-                        setOutputText("评分");
+                        setSectorName("评分");
                         break;
                     case 13:
-                        setOutputText("裁判点评");
+                        setSectorName("裁判点评");
                         break;
                 }
             });
@@ -665,21 +1166,17 @@
                 single()
                 flag = 2;
                 interval = setInterval('single()', 1000);
-                setOutputText("手动模式");
+                applyGaugeBaseColor();
+                syncDialSizeToContainer();
+                setSectorName("手动模式");
+                setPauseButtonState();
             });
             $("#pause").click(function () {
+                togglePauseState();
+            });
 
-                if (items) {
-                    clearInterval(interval);
-                    items = !items
-                    pause.innerHTML = "continue"
-                }
-                else {
-                    interval = setInterval('single()', 1000);
-                    items = !items
-                    pause.innerHTML = "pause"
-                }
-
+            $("#time-pause-btn").click(function () {
+                togglePauseState();
             });
             $("#next").click(function () {
 
