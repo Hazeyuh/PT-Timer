@@ -14,25 +14,110 @@
     <script src="js/jquery.throttle.js"></script>
     <script src="js/jquery.classycountdown.js"></script>
     <script src="title.js"></script>
-    <!--classycountdown.js为可修改的自定义脚本-->
 
     <link rel="stylesheet" type="text/css" href="css/jquery.classycountdown.css" />
 
     <style>
+        /* Theme Embed API: 只改这里即可整体换色 */
         :root {
-            --bg: #f6f2eb;
-            --bg-soft: #efe7dd;
-            --panel: #fbf8f2;
-            --line: #d2c2ae;
-            --line-strong: #a68a6a;
-            --text-main: #2e261f;
-            --text-soft: #6f5a48;
-            --accent: #c07f45;
-            --accent-deep: #9a6031;
-            --panel-edge: rgba(166, 138, 106, 0.52);
-            --panel-shadow: 0 10px 24px rgba(86, 64, 46, 0.11);
+            --theme-bg: #ffffff; /* 主背景色，应用于整个页面背景 */
+            --theme-bg-soft: #f5f5f5; /* 次背景色，用于分隔区域和较大块的背景 */
+            --theme-surface: #ffffff; /* 主要表面色，用于卡片、面板等 */
+            --theme-surface-muted: #f7f7f7; /* 次表面色，用于输入框、按钮等 */
+            --theme-text: #111111; /* 主要文本色，用于标题、正文等 */
+            --theme-text-muted: #555555; /* 次文本色，用于辅助信息、标签等 */
+            --theme-border: #cfcfcf; /* 常规边框色，用于分隔线、输入框边框等 */
+            --theme-border-strong: #9a9a9a; /* 强调边框色，用于标题框、重要按钮等 */
+            --theme-shadow: rgba(0, 0, 0, 0.1); /* 阴影色，用于卡片、面板等的阴影效果 */
+            --theme-button: #f0f0f0; /* 按钮背景色，用于主要操作按钮 */
+            --theme-button-hover: #e2e2e2; /* 按钮悬停背景色，用于主要操作按钮的悬停效果 */
+            --theme-divider: #bdbdbd; /* 分隔线色，用于不同区域之间的分隔 */
+            --theme-dial-active: #1e66d0; /* 定时圆盘活动色，用于剩余时间的圆盘显示 */
+            --theme-dial-danger: #ff0000; /* 定时圆盘警告色，用于时间快结束时的圆盘显示 */
+
+            --bg: var(--theme-bg); 
+            --bg-soft: var(--theme-bg-soft);
+            --panel: var(--theme-surface);
+            --line: var(--theme-border);
+            --line-strong: var(--theme-border-strong);
+            --text-main: var(--theme-text);
+            --text-soft: var(--theme-text-muted);
+            --accent: #444444;
+            --accent-deep: #222222;
+
+            --panel-edge: rgba(0, 0, 0, 0.2);
+            --panel-shadow: 0 10px 24px var(--theme-shadow);
             --timer-size: clamp(460px, 68vh, 760px);
             --main-height: 60vh;
+            --app-gap: clamp(10px, 1.4vw, 16px);
+
+            /* 背景渐变色系 */
+            --bg-grad-white-55: rgba(255, 255, 255, 0.96);
+            --bg-grad-white-0: rgba(255, 255, 255, 0);
+            --bg-grad-circle-5: rgba(0, 0, 0, 0.04);
+            --bg-grad-circle-0: rgba(0, 0, 0, 0);
+            --bg-grad-1: #ffffff;
+            --bg-grad-2: #f7f7f7;
+            --bg-grad-3: #efefef;
+
+            /* 标题区域色系 */
+            --title-bg-1: rgba(255, 255, 255, 0.98);
+            --title-bg-2: rgba(245, 245, 245, 0.98);
+            --title-stripe-1: rgba(0, 0, 0, 0.04);
+            --title-shadow-inner: rgba(255, 255, 255, 0.96);
+            --title-shadow-outer: rgba(0, 0, 0, 0.1);
+
+            --btn-edit-bg: var(--theme-button);
+            --btn-edit-shadow: rgba(0, 0, 0, 0.25);
+
+            /* 中部区域色系 */
+            --zone-bg-1: rgba(255, 255, 255, 0.92);
+            --zone-bg-2: rgba(255, 255, 255, 0.98);
+            --zone-bg-3: rgba(245, 245, 245, 0.98);
+            --zone-shadow-inner: rgba(255, 255, 255, 0.96);
+            --zone-header-border: rgba(0, 0, 0, 0.18);
+
+            /* 定时圆盘与剩余时间色系 */
+            --dial-bg-circle: rgba(0, 0, 0, 0.06);
+            --dial-bg-circle-0: rgba(0, 0, 0, 0);
+            --dial-gauge-bg: rgba(0, 0, 0, 0.18);
+            --dial-gauge-fg: var(--theme-dial-active);
+
+            --time-bg-circle: rgba(0, 0, 0, 0.06);
+            --time-bg-circle-0: rgba(0, 0, 0, 0);
+            --time-bg-1: rgba(255, 255, 255, 0.95);
+            --time-bg-2: rgba(244, 244, 244, 0.95);
+            --btn-pause-bg: var(--theme-button);
+
+            /* 分隔线色系 */
+            --sep-grad-1: rgba(0, 0, 0, 0);
+            --sep-grad-2: rgba(0, 0, 0, 0.45);
+            --sep-grad-3: rgba(0, 0, 0, 0.55);
+            --sep-rep-1: rgba(248, 248, 248, 0.95);
+            --sep-rep-1-90: rgba(248, 248, 248, 0.98);
+            --sep-rep-2: rgba(230, 230, 230, 0.95);
+            --sep-rep-2-90: rgba(230, 230, 230, 0.98);
+            --sep-shadow: rgba(0, 0, 0, 0.2);
+
+            /* 右侧与手动面板色系 */
+            --right-circle: rgba(0, 0, 0, 0.06);
+            --right-circle-0: rgba(0, 0, 0, 0);
+            --man-bg: #f7f7f7;
+            --man-shadow: rgba(0, 0, 0, 0.12);
+            --man-border: #b8b8b8;
+            --man-input: #ffffff;
+            --man-btn: var(--theme-button);
+            --man-btn-hover: var(--theme-button-hover);
+
+            /* 底部环节按钮色系 */
+            --stage-bg-1: rgba(255, 255, 255, 0.9);
+            --stage-bg-2: rgba(243, 243, 243, 0.94);
+            --stage-border: rgba(0, 0, 0, 0.18);
+            --stage-btn: #f0f0f0;
+            --stage-btn-shadow: rgba(0, 0, 0, 0.1);
+            --stage-line-1: rgba(0, 0, 0, 0);
+            --stage-line-2: rgba(0, 0, 0, 0.55);
+            --stage-btn-hover: #e4e4e4;
         }
 
         html,
@@ -44,9 +129,9 @@
         body {
             color: var(--text-main);
             background:
-                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 38%),
-                radial-gradient(circle at 85% 8%, rgba(228, 207, 181, 0.5), rgba(228, 207, 181, 0) 42%),
-                linear-gradient(135deg, #f9f5ef 0%, #f3ede4 46%, #eee4d7 100%);
+                radial-gradient(circle at 20% 20%, var(--bg-grad-white-55), var(--bg-grad-white-0) 38%),
+                radial-gradient(circle at 85% 8%, var(--bg-grad-circle-5), var(--bg-grad-circle-0) 42%),
+                linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 46%, var(--bg-grad-3) 100%);
             overflow-x: hidden;
             overflow-y: hidden;
         }
@@ -63,25 +148,30 @@
             display: grid;
             grid-template-rows: 20vh 60vh 20vh;
             gap: 0;
-            padding: clamp(10px, 1.4vw, 16px);
+            padding: var(--app-gap);
             position: relative;
             margin-bottom: 20px;
         }
 
         .corner-logo {
             position: absolute;
-            top: 10px;
-            right: clamp(12px, 1.4vw, 20px);
+            top: var(--app-gap);
+            right: var(--app-gap);
             z-index: 6;
             width: min(306px, 22.5vw);
+            height: min(clamp(80px, 14vh, 150px), calc(20vh - (var(--app-gap) * 2)));
             pointer-events: none;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
         }
 
         .corner-logo img {
-            width: 100%;
-            height: min(clamp(80px, 14vh, 150px), calc(20vh - 20px));
+            width: auto;
+            max-width: 100%;
+            height: 100%;
             object-fit: contain;
-            object-position: right top;
+            object-position: center;
         }
 
         .title-section {
@@ -108,11 +198,11 @@
             border-radius: 22px;
             border: 2px solid var(--line-strong);
             background:
-                linear-gradient(130deg, rgba(255, 255, 255, 0.85), rgba(251, 243, 233, 0.9)),
-                repeating-linear-gradient(-45deg, rgba(166, 138, 106, 0.06), rgba(166, 138, 106, 0.06) 8px, rgba(255, 255, 255, 0) 8px, rgba(255, 255, 255, 0) 18px);
+                linear-gradient(130deg, var(--title-bg-1), var(--title-bg-2)),
+                repeating-linear-gradient(-45deg, var(--title-stripe-1), var(--title-stripe-1) 8px, var(--bg-grad-white-0) 8px, var(--bg-grad-white-0) 18px);
             box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.8),
-                0 12px 30px rgba(82, 61, 43, 0.14);
+                inset 0 1px 0 var(--title-shadow-inner),
+                0 12px 30px var(--title-shadow-outer);
             padding: clamp(14px, 1.7vw, 20px) clamp(16px, 2vw, 28px);
             display: flex;
             align-items: center;
@@ -122,6 +212,7 @@
             min-height: clamp(80px, 14vh, 150px);
         }
 
+        /* 移除文本溢出省略号，彻底交给 ResizeObserver 处理 */
         #output {
             color: var(--text-main);
             user-select: none;
@@ -129,11 +220,10 @@
             text-align: center;
             white-space: nowrap;
             text-transform: uppercase;
-            font-size: clamp(42px, 5.8vw, 96px);
-            text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
+            font-size: 96px; /* 初始最大值 */
+            text-shadow: 0 2px 0 var(--title-shadow-inner);
             padding: 0 clamp(10px, 1.2vw, 18px);
             overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .top-section-frame {
@@ -142,8 +232,8 @@
             padding: clamp(14px, 1.7vw, 20px) clamp(16px, 2vw, 28px);
             border-radius: 22px;
             border: 2px solid var(--line-strong);
-            background: linear-gradient(130deg, rgba(255, 255, 255, 0.85), rgba(251, 243, 233, 0.9));
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 12px 30px rgba(82, 61, 43, 0.14);
+            background: linear-gradient(130deg, var(--title-bg-1), var(--title-bg-2));
+            box-shadow: inset 0 1px 0 var(--title-shadow-inner), 0 12px 30px var(--title-shadow-outer);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -152,18 +242,17 @@
         }
 
         #top-section-name {
-            font-size: clamp(42px, 5.8vw, 96px);
+            font-size: 96px;
             line-height: 1;
             text-transform: uppercase;
             padding: 0 clamp(10px, 1.2vw, 18px);
             overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         #edit-title-btn {
             border: 2px solid var(--line-strong);
             border-radius: 16px;
-            background: #e2c9aa;
+            background: var(--btn-edit-bg);
             color: var(--text-main);
             cursor: pointer;
             text-transform: none;
@@ -175,13 +264,13 @@
             writing-mode: vertical-rl;
             text-orientation: upright;
             letter-spacing: 0.03em;
-            box-shadow: 0 3px 0 rgba(130, 98, 67, 0.45);
+            box-shadow: 0 3px 0 var(--btn-edit-shadow);
             transition: transform 0.14s ease, box-shadow 0.14s ease;
         }
 
         #edit-title-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 5px 0 rgba(130, 98, 67, 0.45);
+            box-shadow: 0 5px 0 var(--btn-edit-shadow);
         }
 
         .main-panel {
@@ -199,10 +288,10 @@
             min-width: 0;
             border-radius: 20px;
             background:
-                radial-gradient(circle at 12% 14%, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0) 44%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(246, 236, 224, 0.9));
+                radial-gradient(circle at 12% 14%, var(--zone-bg-1), var(--bg-grad-white-0) 44%),
+                linear-gradient(180deg, var(--zone-bg-2), var(--zone-bg-3));
             border: 1px solid var(--panel-edge);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74), var(--panel-shadow);
+            box-shadow: inset 0 1px 0 var(--zone-shadow-inner), var(--panel-shadow);
             min-height: 0;
             overflow: hidden;
             display: flex;
@@ -213,7 +302,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-bottom: 1px solid rgba(166, 138, 106, 0.36);
+            border-bottom: 1px solid var(--zone-header-border);
             padding: 0 12px;
             min-height: 0;
             height: 15%;
@@ -221,7 +310,7 @@
         }
 
         .zone-header-label {
-            font-size: clamp(24px, 2.4vw, 40px);
+            font-size: clamp(16px, 2.4vw, 40px);
             color: var(--text-soft);
             text-transform: uppercase;
             line-height: 1;
@@ -248,7 +337,7 @@
             height: 100%;
             flex: none;
             border-bottom: none;
-            border-right: 1px solid rgba(166, 138, 106, 0.36);
+            border-right: none;
             padding: 0 0 0 clamp(2px, 0.4vw, 8px);
             justify-content: flex-start;
         }
@@ -289,7 +378,7 @@
             padding: 0;
             border-radius: 20px;
             overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, rgba(231, 210, 184, 0.25), rgba(231, 210, 184, 0) 70%);
+            background: radial-gradient(circle at 50% 50%, var(--dial-bg-circle), var(--dial-bg-circle-0) 70%);
         }
 
         #countdown1 .ClassyCountdown-wrapper {
@@ -319,8 +408,8 @@
             padding: clamp(8px, 1vw, 12px) clamp(16px, 2vw, 24px);
             text-align: center;
             background:
-                radial-gradient(circle at 18% 20%, rgba(216, 184, 147, 0.26), rgba(216, 184, 147, 0) 45%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(247, 239, 229, 0.78));
+                radial-gradient(circle at 18% 20%, var(--time-bg-circle), var(--time-bg-circle-0) 45%),
+                linear-gradient(180deg, var(--time-bg-1), var(--time-bg-2));
         }
 
         .time-left-label {
@@ -336,7 +425,7 @@
             line-height: 0.95;
             text-transform: uppercase;
             white-space: nowrap;
-            text-shadow: 0 2px 0 rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 0 var(--title-shadow-inner);
             max-width: 100%;
             overflow: hidden;
             text-overflow: clip;
@@ -347,12 +436,12 @@
             height: clamp(42px, 5.4vh, 56px);
             border-radius: 12px;
             border: 1px solid var(--line-strong);
-            background: #e4caaa;
+            background: var(--btn-pause-bg);
             color: var(--text-main);
             font-size: clamp(19px, 1.8vw, 30px);
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 4px 0 rgba(130, 98, 67, 0.45);
+            box-shadow: 0 4px 0 var(--btn-edit-shadow);
         }
 
         #time-pause-btn:hover {
@@ -364,9 +453,9 @@
             width: 100%;
             border-radius: 999px;
             background:
-                linear-gradient(180deg, rgba(127, 97, 69, 0) 0%, rgba(127, 97, 69, 0.78) 14%, rgba(127, 97, 69, 0.78) 86%, rgba(127, 97, 69, 0) 100%),
-                repeating-linear-gradient(180deg, rgba(242, 229, 212, 0.8), rgba(242, 229, 212, 0.8) 5px, rgba(217, 197, 171, 0.82) 5px, rgba(217, 197, 171, 0.82) 10px);
-            box-shadow: 0 0 0 1px rgba(166, 138, 106, 0.28);
+                linear-gradient(180deg, var(--sep-grad-1) 0%, var(--sep-grad-2) 14%, var(--sep-grad-2) 86%, var(--sep-grad-1) 100%),
+                repeating-linear-gradient(180deg, var(--sep-rep-1), var(--sep-rep-1) 5px, var(--sep-rep-2) 5px, var(--sep-rep-2) 10px);
+            box-shadow: 0 0 0 1px var(--sep-shadow);
         }
 
         .right-panel {
@@ -378,8 +467,8 @@
             gap: clamp(8px, 1.2vh, 12px);
             padding: clamp(10px, 1.2vw, 14px);
             background:
-                radial-gradient(circle at 78% 14%, rgba(209, 171, 129, 0.23), rgba(209, 171, 129, 0) 40%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(247, 239, 229, 0.78));
+                radial-gradient(circle at 78% 14%, var(--right-circle), var(--right-circle-0) 40%),
+                linear-gradient(180deg, var(--time-bg-1), var(--time-bg-2));
         }
 
         .manual-panel {
@@ -387,27 +476,29 @@
             max-width: 100%;
             border-radius: 14px;
             border: 1px solid var(--line-strong);
-            background: #f3e4d2;
-            box-shadow: 0 8px 20px rgba(98, 72, 49, 0.16);
+            background: var(--man-bg);
+            box-shadow: 0 8px 20px var(--man-shadow);
             padding: clamp(10px, 1vw, 14px);
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: clamp(6px, 0.8vw, 10px);
         }
 
+        /* 移除强制宽高比和定高，赋予弹性的最小高度 */
         .manual-panel input,
         .manual-panel button {
             width: 100%;
-            height: clamp(68px, 10.5vh, 124px);
-            aspect-ratio: 1 / 1;
+            min-height: 50px;
+            height: clamp(50px, 10.5vh, 124px);
             border-radius: 10px;
-            border: 1px solid #b4916f;
+            border: 1px solid var(--man-border);
             color: var(--text-main);
-            background: #fffaf3;
-            font-size: clamp(23px, 2.6vw, 38px);
+            background: var(--man-input);
+            font-size: clamp(16px, 2.2vw, 36px);
             text-align: center;
             text-transform: uppercase;
-            line-height: 0.9;
+            line-height: 1;
+            padding: 2px;
         }
 
         .manual-panel input[type="number"] {
@@ -427,11 +518,11 @@
 
         .manual-panel button {
             cursor: pointer;
-            background: #e6cda9;
+            background: var(--man-btn);
         }
 
         .manual-panel button:hover {
-            background: #ddb98f;
+            background: var(--man-btn-hover);
         }
 
         .stages {
@@ -445,28 +536,30 @@
             padding-top: clamp(8px, 1vh, 12px);
             padding-bottom: clamp(8px, 1vh, 12px);
             border-radius: 16px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(245, 233, 217, 0.56));
-            border: 1px solid rgba(166, 138, 106, 0.34);
+            background: linear-gradient(180deg, var(--stage-bg-1), var(--stage-bg-2));
+            border: 1px solid var(--stage-border);
         }
 
+        /* 允许文字自然换行 */
         .stage-btn {
             position: relative;
             min-height: 0;
             height: 100%;
             border-radius: 10px;
             border: 1px solid var(--line-strong);
-            background: #e6d0b2;
+            background: var(--stage-btn);
             color: var(--text-main);
-            font-size: clamp(18px, 3.5vh, 34px);
-            line-height: 0.85;
+            font-size: clamp(14px, 2.5vh, 30px);
+            line-height: 1.1;
             text-align: center;
-            padding: 8px 10px;
+            padding: 4px;
             cursor: pointer;
-            box-shadow: 0 3px 8px rgba(95, 71, 49, 0.12);
+            box-shadow: 0 3px 8px var(--stage-btn-shadow);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            white-space: nowrap;
         }
 
         .stage-btn::after {
@@ -477,7 +570,7 @@
             width: 2px;
             height: 68%;
             border-radius: 99px;
-            background: linear-gradient(180deg, rgba(127, 97, 69, 0), rgba(127, 97, 69, 0.95) 20%, rgba(127, 97, 69, 0.95) 80%, rgba(127, 97, 69, 0));
+            background: linear-gradient(180deg, var(--stage-line-1), var(--stage-line-2) 20%, var(--stage-line-2) 80%, var(--stage-line-1));
         }
 
         .stages .stage-btn:last-child::after {
@@ -486,7 +579,7 @@
 
         .stage-btn:hover {
             transform: translateY(-1px);
-            background: #dfc39f;
+            background: var(--stage-btn-hover);
         }
 
         @media (max-width: 1420px) {
@@ -507,6 +600,7 @@
             }
         }
 
+        /* 优化移动端 Grid布局 */
         @media (max-width: 1080px) {
             .main-panel {
                 grid-template-columns: 1fr;
@@ -532,8 +626,9 @@
             }
 
             .corner-logo img {
+                width: 100%;
                 height: min(clamp(88px, 12vh, 130px), calc(20vh - 20px));
-                object-position: center top;
+                object-position: center;
             }
 
             .title-frame {
@@ -560,8 +655,8 @@
                 width: 100%;
                 height: 12px;
                 background:
-                    linear-gradient(90deg, rgba(127, 97, 69, 0) 0%, rgba(127, 97, 69, 0.9) 10%, rgba(127, 97, 69, 0.9) 90%, rgba(127, 97, 69, 0) 100%),
-                    repeating-linear-gradient(90deg, rgba(242, 229, 212, 0.9), rgba(242, 229, 212, 0.9) 6px, rgba(217, 197, 171, 0.9) 6px, rgba(217, 197, 171, 0.9) 12px);
+                    linear-gradient(90deg, var(--sep-grad-1) 0%, var(--sep-grad-3) 10%, var(--sep-grad-3) 90%, var(--sep-grad-1) 100%),
+                    repeating-linear-gradient(90deg, var(--sep-rep-1-90), var(--sep-rep-1-90) 6px, var(--sep-rep-2-90) 6px, var(--sep-rep-2-90) 12px);
             }
 
             .timer-panel {
@@ -576,7 +671,7 @@
             .zone-dial .zone-header {
                 justify-content: center;
                 border-right: none;
-                border-bottom: 1px solid rgba(166, 138, 106, 0.36);
+                border-bottom: 1px solid var(--zone-header-border);
                 padding: 0 8px;
             }
 
@@ -637,10 +732,7 @@
             }
         }
     </style>
-    <!--[if IE]>
-<script src="http://libs.baidu.com/html5shiv/3.7/html5shiv.min.js"></script>
-<![endif]-->
-</head>
+    </head>
 
 <body>
     <div class="app">
@@ -676,7 +768,7 @@
                 <div class="zone-inner zone-time">
                     <div class="time-left-label">TIME LEFT</div>
                     <div id="time-left-value">00 : 00</div>
-                    <button id="time-pause-btn" type="button">PAUSE</button>
+                    <button id="time-pause-btn" type="button">START</button>
                 </div>
             </div>
 
@@ -685,64 +777,61 @@
             <aside class="zone zone-extra">
                 <div class="zone-inner right-panel">
                     <div class="manual-panel">
-                        <input type="number" name="minutes" id="min" placeholder="MIN" />
-                        <input type="number" name="seconds" id="sec" placeholder="SEC" />
-                        <button id="start">START</button>
-                        <button id="pause">PAUSE</button>
-                        <button id="recover">RECOVER</button>
-                        <button id="next">NEXT</button>
+                        <input type="number" name="minutes" id="min" placeholder="分" />
+                        <input type="number" name="seconds" id="sec" placeholder="秒" />
+                        <button id="start">开始</button>
+                        <button id="recover">重置</button>
+                        <button id="next" style="grid-column: span 2;">下一环节</button>
                     </div>
                 </div>
             </aside>
         </section>
 
         <section class="stages">
-            <button id="bt1" class="stage-btn">选题环节(1')</button>
-            <button id="bt2" class="stage-btn">正方准备(2')</button>
-            <button id="bt3" class="stage-btn">正方报告(12')</button>
-            <button id="bt4" class="stage-btn">反方提问(2')</button>
-            <button id="bt5" class="stage-btn">反方准备(2')</button>
-            <button id="bt6" class="stage-btn">反方报告(3')</button>
-            <button id="bt7" class="stage-btn">正反方讨论(10')</button>
-            <button id="bt8" class="stage-btn">评论方提问(3')</button>
-            <button id="bt9" class="stage-btn">评论方准备(2')</button>
-            <button id="bt10" class="stage-btn">评论方报告(4')</button>
-            <button id="bt11" class="stage-btn">正方总结(1')</button>
-            <button id="bt12" class="stage-btn">评分(2')</button>
-            <button id="bt13" class="stage-btn">裁判点评(5')</button>
+            <button id="bt1" class="stage-btn">选题环节 (1')</button>
+            <button id="bt2" class="stage-btn">正方准备 (2')</button>
+            <button id="bt3" class="stage-btn">正方报告 (12')</button>
+            <button id="bt4" class="stage-btn">反方提问 (2')</button>
+            <button id="bt5" class="stage-btn">反方准备 (2')</button>
+            <button id="bt6" class="stage-btn">反方报告 (3')</button>
+            <button id="bt7" class="stage-btn">正反方讨论 (10')</button>
+            <button id="bt8" class="stage-btn">评论方提问 (3')</button>
+            <button id="bt9" class="stage-btn">评论方准备 (2')</button>
+            <button id="bt10" class="stage-btn">评论方报告 (4')</button>
+            <button id="bt11" class="stage-btn">正方总结 (1')</button>
+            <button id="bt12" class="stage-btn">评分 (2')</button>
+            <button id="bt13" class="stage-btn">裁判点评 (5')</button>
         </section>
     </div>
 
     <audio src="song.mp3" id="audio"></audio>
 
-
     <script type="text/javascript">
+        "use strict";
 
+        // 全局状态机引擎
+        var state = 'IDLE'; // 状态枚举：IDLE, RUNNING, PAUSED
+        var endTime = 0;
+        var pausedTimeLeft = 0;
+        var totalTime = 1;
+        var intervalId = null;
+        var num = 0;
+        var currentStageName = "准备阶段";
+        var currentStageDuration = 0;
+        var time1 = 0; // 反方报告结余时间
+        var lastRenderedSecond = -1;
 
-        var time = 0
-        var time1 = 0
-        var totaltime = 1
-        var backuptime = 0
-        var recovertime
-        var flag = 0
-        var interval
-        var items = true
-        var num = 0
-        var timerBaseColor = "#b98756"
+        // 获取 CSS 变量协助绘图
+        function getCssVariable(variableName) {
+            return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+        }
 
         function setOutputText(rawText) {
             var output = document.getElementById("output");
-            if (!output) {
-                return;
-            }
-
+            if (!output) return;
             var text = (rawText || "").toString().replace(/\r/g, "").replace(/\n+/g, "").replace(/<[^>]+>/g, "").trim();
-            if (!text) {
-                text = "CUPT交流赛";
-            }
-
-            output.textContent = text;
-            applyTitleScale(text);
+            output.textContent = text || "CUPT交流赛";
+            applyDynamicTextFit();
         }
 
         function loadInitialTitle() {
@@ -750,29 +839,65 @@
             setOutputText(text);
         }
 
-        function applyTitleScale(text) {
-            var output = document.getElementById("output");
-            if (!output) {
-                return;
-            }
+        // 引入 ResizeObserver Text Fit 算法解决溢出
+        function applyDynamicTextFit() {
+            var elements = [document.getElementById('output'), document.getElementById('top-section-name')];
+            var minSize = 96; // 初始最大值
 
-            var length = Array.from(text || "").length;
-            var estimate = 104 - Math.max(0, length - 6) * 3;
-            var viewportLimit = Math.max(34, Math.floor(window.innerWidth * 0.076));
-            var size = Math.max(30, Math.min(estimate, viewportLimit));
-            output.style.fontSize = size + "px";
-            var topName = document.getElementById("top-section-name");
-            if (topName) {
-                topName.style.fontSize = size + "px";
-            }
+            // 第一阶段：找出能让他们都显示得下的最小字号
+            elements.forEach(function(el) {
+                if (!el || !el.parentElement) return;
+
+                el.style.fontSize = '96px';
+                
+                var parent = el.parentElement;
+                var parentStyle = window.getComputedStyle(parent);
+                var maxContentW = parent.clientWidth 
+                    - parseFloat(parentStyle.paddingLeft || 0) 
+                    - parseFloat(parentStyle.paddingRight || 0);
+
+                var elStyle = window.getComputedStyle(el);
+                var elPadding = parseFloat(elStyle.paddingLeft || 0) + parseFloat(elStyle.paddingRight || 0);
+                var targetW = maxContentW - elPadding;
+
+                var span = document.createElement('span');
+                span.style.fontFamily = elStyle.fontFamily;
+                span.style.fontWeight = elStyle.fontWeight;
+                span.style.letterSpacing = elStyle.letterSpacing;
+                span.style.textTransform = elStyle.textTransform;
+                span.style.position = 'absolute';
+                span.style.visibility = 'hidden';
+                span.style.whiteSpace = 'nowrap';
+                span.textContent = el.textContent;
+                document.body.appendChild(span);
+
+                var currentSize = 96;
+                while (currentSize > 12) {
+                    span.style.fontSize = currentSize + 'px';
+                    if (span.offsetWidth <= targetW) {
+                        break;
+                    }
+                    currentSize -= 2;
+                }
+                
+                document.body.removeChild(span);
+                
+                if (currentSize < minSize) {
+                    minSize = currentSize;
+                }
+            });
+
+            // 第二阶段：将计算出的最小字号同时应用到两者，保证同一大小并完整显示
+            elements.forEach(function(el) {
+                if (el) {
+                    el.style.fontSize = minSize + 'px';
+                }
+            });
         }
 
         function updateTimeLeftDisplay(totalSeconds) {
             var valueNode = document.getElementById("time-left-value");
-            if (!valueNode) {
-                return;
-            }
-
+            if (!valueNode) return;
             var safeValue = Math.max(0, Number(totalSeconds) || 0);
             var minutes = Math.floor(safeValue / 60);
             var seconds = safeValue % 60;
@@ -781,40 +906,21 @@
 
         function setSectorName(rawText) {
             var text = (rawText || "").toString().replace(/\r/g, "").replace(/\n+/g, "").replace(/<[^>]+>/g, "").trim();
-            if (!text) {
-                text = "准备阶段";
-            }
-            $(".sector-name").text(text);
+            $(".sector-name").text(text || "准备阶段");
+            applyDynamicTextFit();
         }
 
-        function setPauseButtonState() {
-            var label = items ? "PAUSE" : "START";
-            $("#pause").text(label);
+        // 控制 UI 显示 START / PAUSE / RESUME
+        function updatePauseButtonState() {
+            var label = "开始";
+            if (state === 'RUNNING') label = "暂停";
+            else if (state === 'PAUSED') label = "继续";
             $("#time-pause-btn").text(label);
-        }
-
-        function togglePauseState() {
-            if (items) {
-                clearInterval(interval);
-                items = false;
-            } else {
-                interval = setInterval('single()', 1000);
-                items = true;
-            }
-            setPauseButtonState();
-        }
-
-        function applyGaugeBaseColor() {
-            $('#countdown1 .ClassyCountdown-wrapper input').trigger('configure', {
-                fgColor: timerBaseColor
-            });
         }
 
         function syncDialSizeToContainer() {
             var dialContainer = document.getElementById("countdown1");
-            if (!dialContainer) {
-                return;
-            }
+            if (!dialContainer) return;
             var side = Math.max(220, Math.floor(Math.min(dialContainer.clientWidth, dialContainer.clientHeight)));
             $('#countdown1 .ClassyCountdown-wrapper input').trigger('configure', {
                 width: side,
@@ -822,380 +928,201 @@
             }).trigger('change');
         }
 
-        function single() {
-            updateTimeLeftDisplay(time);
+        // ================= 核心定时引擎 (Date.now()时间戳相减) =================
+        function startTimer(durationSeconds) {
+            if (intervalId) clearInterval(intervalId);
+            totalTime = durationSeconds;
+            endTime = Date.now() + durationSeconds * 1000;
+            state = 'RUNNING';
+            
+            updateTimeLeftDisplay(durationSeconds);
+            
+            var styleConfig = getDialStyle();
+            
+            // 强制重新初始化圆盘上限 (flag 1)
             $('#countdown1').ClassyCountdown({
                 theme: "theme1",
-                style: {
-                    element: '',
-                    textResponsive: 2,
-                    seconds: {
-                        gauge: {
-                            thickness: 1,
-                            bgColor: "rgba(118,88,60,0.18)",
-                            fgColor: timerBaseColor
-                        },
-                        textCSS: 'font-family:\'Trebuchet MS\';font-weight:800;color:#7b6046;'
-                    }
-                },
-                end: time
-            }, flag, totaltime)
-            time--;
-            backuptime = time;
-            if (num == 6) { time1 = time }
+                style: styleConfig,
+                end: durationSeconds
+            }, 1, totalTime);
+            
+            // 修复原生插件在 flag=1 时强行写死 #2980b9 的问题，强制恢复配置颜色
+            $('#countdown1 .ClassyCountdown-wrapper input').trigger('configure', {
+                fgColor: styleConfig.seconds.gauge.fgColor
+            });
+            
+            lastRenderedSecond = durationSeconds;
+            updatePauseButtonState();
+            
+            // 使用200ms的高频扫描避免漏刷，但不改变时间计算的精准性
+            intervalId = setInterval(tick, 200);
+        }
 
-            if (time < 0 && time > -2) {
-                document.getElementById('audio').play();
+        function getDialStyle() {
+            return {
+                element: '',
+                textResponsive: 2,
+                seconds: {
+                    gauge: {
+                        thickness: 1,
+                        bgColor: getCssVariable('--dial-gauge-bg') || "rgba(118,88,60,0.18)",
+                        fgColor: getCssVariable('--dial-gauge-fg') || "#1e66d0"
+                    },
+                    textCSS: 'display:none;'
+                }
+            };
+        }
+
+        function tick() {
+            if (state !== 'RUNNING') return;
+            var now = Date.now();
+            var timeLeft = Math.ceil((endTime - now) / 1000);
+
+            if (timeLeft <= 0) {
+                timeLeft = 0;
+                if (state === 'RUNNING') {
+                    // 仅在真实归零的那一刻响铃，避免初始挂载Bug
+                    document.getElementById('audio').play().catch(function(e){});
+                }
+                state = 'IDLE';
+                clearInterval(intervalId);
+                updatePauseButtonState();
             }
-        };
-        single()
+
+            if (num === 6) { time1 = timeLeft; } // 反方报告时间记录
+
+            // 只有当秒数改变时才重绘，节约性能
+            if (timeLeft !== lastRenderedSecond) {
+                lastRenderedSecond = timeLeft;
+                updateTimeLeftDisplay(timeLeft);
+                // 更新圆盘 (flag 2)
+                $('#countdown1').ClassyCountdown({
+                    theme: "theme1",
+                    style: getDialStyle(),
+                    end: timeLeft
+                }, 2, totalTime);
+            }
+        }
+
+        // ================= 全局暂停/恢复 控制流 =================
+        function togglePauseState() {
+            if (state === 'RUNNING') {
+                var now = Date.now();
+                pausedTimeLeft = Math.ceil((endTime - now) / 1000);
+                if (pausedTimeLeft < 0) pausedTimeLeft = 0;
+                state = 'PAUSED';
+                clearInterval(intervalId);
+            } else if (state === 'PAUSED' || state === 'IDLE') {
+                if (state === 'IDLE' && pausedTimeLeft <= 0) return; // 无剩余时间不可继续
+                endTime = Date.now() + pausedTimeLeft * 1000;
+                state = 'RUNNING';
+                lastRenderedSecond = -1; // 强制刷新
+                intervalId = setInterval(tick, 200);
+            }
+            updatePauseButtonState();
+        }
+
+        // 统一提取载入阶段辅助逻辑，消除冗余
+        function loadStage(stageNum, durationMinutes, stageName) {
+            num = stageNum;
+            var finalSeconds = durationMinutes * 60;
+
+            // 特殊业务：环节 7 累加环节 6 剩余时间
+            if (num === 7 && time1 > 0) {
+                finalSeconds += time1;
+                time1 = 0; // 消耗后清空
+            }
+            
+            currentStageName = stageName;
+            currentStageDuration = finalSeconds;
+
+            setSectorName(stageName);
+            startTimer(finalSeconds);
+            syncDialSizeToContainer();
+        }
 
         $(document).ready(function () {
+            // ResizeObserver 接管大小调整
+            var ro = new ResizeObserver(function() {
+                applyDynamicTextFit();
+                syncDialSizeToContainer();
+            });
+            ro.observe(document.body);
+
             loadInitialTitle();
             updateTimeLeftDisplay(0);
             setSectorName("准备阶段");
-            setPauseButtonState();
+            updatePauseButtonState();
 
-            $(window).on("resize", function () {
-                var output = document.getElementById("output");
-                if (output) {
-                    applyTitleScale(output.textContent || "");
-                }
-                syncDialSizeToContainer();
-            });
+            // 初始化默认的空圆盘 (使用 flag=0 让插件初次构建 DOM)
+            $('#countdown1').ClassyCountdown({
+                theme: "theme1",
+                style: getDialStyle(),
+                end: 0
+            }, 0, 1);
+            syncDialSizeToContainer();
 
             $("#edit-title-btn").click(function () {
                 var currentTitle = $("#output").text().trim() || "CUPT交流赛";
                 var changed = window.prompt("请输入新的比赛标题", currentTitle);
-                if (changed !== null) {
+                if (changed !== null && changed.trim() !== "") {
                     setOutputText(changed);
                 }
             });
 
-            $("#bt1").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                time = 1 * 60;
-                totaltime = time;
-                num = 1;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("选题环节");
-                setPauseButtonState();
+            // 阶段按钮调用统一辅助函数
+            $("#bt1").click(function () { loadStage(1, 1, "选题环节"); });
+            $("#bt2").click(function () { loadStage(2, 2, "正方准备"); });
+            $("#bt3").click(function () { loadStage(3, 12, "正方报告"); });
+            $("#bt4").click(function () { loadStage(4, 2, "反方提问"); });
+            $("#bt5").click(function () { loadStage(5, 2, "反方准备"); });
+            $("#bt6").click(function () { loadStage(6, 3, "反方报告"); });
+            $("#bt7").click(function () { loadStage(7, 10, "正反方讨论"); });
+            $("#bt8").click(function () { loadStage(8, 3, "评论方提问"); });
+            $("#bt9").click(function () { loadStage(9, 2, "评论方准备"); });
+            $("#bt10").click(function () { loadStage(10, 4, "评论方报告"); });
+            $("#bt11").click(function () { loadStage(11, 1, "正方总结"); });
+            $("#bt12").click(function () { loadStage(12, 2, "评分"); });
+            $("#bt13").click(function () { loadStage(13, 5, "裁判点评"); });
+
+            // 彻底去除 Eval 的安全执行方式
+            $("#next").click(function () {
+                var num1 = num + 1;
+                if (num1 > 13) { num1 -= 13; }
+                document.getElementById("bt" + num1).click();
             });
 
-            $("#bt2").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                time = 2 * 60;
-                totaltime = time;
-                num = 2;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("正方准备");
-                setPauseButtonState();
-            });
-            $("#bt3").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                time = 12 * 60;
-                totaltime = time;
-                num = 3;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("正方报告");
-                setPauseButtonState();
-            });
-            $("#bt4").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                time = 2 * 60;
-                num = 4;
-                totaltime = time;
-
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("反方提问");
-                setPauseButtonState();
-            });
-            $("#bt5").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                time = 2 * 60;
-                totaltime = time;
-                num = 5;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("反方准备");
-                setPauseButtonState();
-            });
-            $("#bt6").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                time = 3 * 60;
-                totaltime = time;
-                num = 6;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("反方报告");
-                setPauseButtonState();
-            });
-            $("#bt7").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                if (time1 > 0) { time = time1 + 600 }
-                else { time = 10 * 60; }
-                totaltime = time;
-                time1 = 0;
-                num = 7;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("正反方讨论");
-                setPauseButtonState();
-            });
-
-            $("#bt8").click(function () {
-                recovertime = backuptime
-                recover_num = num
-                items = true
-                clearInterval(interval);
-                time = 3 * 60;
-                totaltime = time;
-                num = 8;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("评论方提问");
-                setPauseButtonState();
-            });
-            $("#bt9").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                num = 9;
-                time = 2 * 60;
-                totaltime = time;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("评论方准备");
-                setPauseButtonState();
-            });
-            $("#bt10").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                num = 10;
-                time = 4 * 60;
-                totaltime = time;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("评论方报告");
-                setPauseButtonState();
-            });
-            $("#bt11").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                num = 11;
-                time = 1 * 60;
-                totaltime = time;
-
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("正方总结");
-                setPauseButtonState();
-            });
-
-            $("#bt12").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                time = 2 * 60;
-                totaltime = time;
-                num = 12;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("评分");
-                setPauseButtonState();
-            });
-            $("#bt13").click(function () {
-                items = true
-                recovertime = backuptime
-                recover_num = num
-                clearInterval(interval);
-                time = 5 * 60;
-                totaltime = time;
-                num = 13;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("裁判点评");
-                setPauseButtonState();
-            });
             $("#recover").click(function () {
-                items = true
-                num = recover_num
-                clearInterval(interval);
-                time = recovertime;
-                totaltime = time;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setPauseButtonState();
-
-                switch (recover_num) {
-                    case 1:
-                        setSectorName("选题环节");
-                        break;
-                    case 2:
-                        setSectorName("正方准备");
-                        break;
-                    case 3:
-                        setSectorName("正方报告");
-                        break;
-                    case 4:
-                        setSectorName("反方提问");
-                        break;
-                    case 5:
-                        setSectorName("反方准备");
-                        break;
-                    case 6:
-                        setSectorName("反方报告");
-                        break;
-                    case 7:
-                        setSectorName("正反方讨论");
-                        break;
-                    case 8:
-                        setSectorName("评论方提问");
-                        break;
-                    case 9:
-                        setSectorName("评论方准备");
-                        break;
-                    case 10:
-                        setSectorName("评论方报告");
-                        break;
-                    case 11:
-                        setSectorName("正方总结");
-                        break;
-                    case 12:
-                        setSectorName("评分");
-                        break;
-                    case 13:
-                        setSectorName("裁判点评");
-                        break;
+                if (currentStageDuration > 0) {
+                    setSectorName(currentStageName);
+                    startTimer(currentStageDuration);
+                    syncDialSizeToContainer();
                 }
             });
 
             $("#start").click(function () {
-                items = true
-                clearInterval(interval);
-                time = $("#min").val() * 60 + $("#sec").val() * 1;
-                totaltime = time;
-                flag = 1;
-                single()
-                flag = 2;
-                interval = setInterval('single()', 1000);
-                applyGaugeBaseColor();
-                syncDialSizeToContainer();
-                setSectorName("手动模式");
-                setPauseButtonState();
-            });
-            $("#pause").click(function () {
-                togglePauseState();
+                var m = parseInt($("#min").val()) || 0;
+                var s = parseInt($("#sec").val()) || 0;
+                var total = m * 60 + s;
+                if (total > 0) {
+                    num = 0;
+                    currentStageName = "手动模式";
+                    currentStageDuration = total;
+                    setSectorName("手动模式");
+                    startTimer(total);
+                }
             });
 
             $("#time-pause-btn").click(function () {
                 togglePauseState();
             });
-            $("#next").click(function () {
 
-                num1 = num + 1;
-                if (num1 > 13) { num1 -= 13 }
-                str = "bt" + num1.toString() + ".click()";
-                eval(str)
-            });
-
-            window.onload = function () {
-                window.onkeypress = function (e) {
-                    // alert(e.key)//弹出按键对应的字母
-                    // alert(e.keyCode)
-                    if (e.charCode == 122) {
-                        next.click()
-                    }
+            // 使用现代 API 绑定按键
+            window.addEventListener('keydown', function (e) {
+                if (e.key.toLowerCase() === 'z' && e.target.tagName !== 'INPUT') {
+                    document.getElementById('next').click();
                 }
-            }
-
+            });
         });
 
     </script>
