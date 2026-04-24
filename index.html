@@ -736,9 +736,7 @@
 
 <body>
     <div class="app">
-        <div class="corner-logo">
-            <img src="NJU.png" alt="NANJING UNIVERSITY" width="178" height="224" />
-        </div>
+        <!-- NJU logo removed per request -->
 
         <header class="title-section">
             <div class="title-row">
@@ -788,11 +786,9 @@
         </section>
 
         <section class="stages">
-            <button id="bt1" class="stage-btn">选题环节 (1')</button>
-            <button id="bt2" class="stage-btn">正方准备 (2')</button>
+            <button id="bt2" class="stage-btn">准备环节 (1')</button>
             <button id="bt3" class="stage-btn">正方报告 (12')</button>
-            <button id="bt4" class="stage-btn">反方提问 (2')</button>
-            <button id="bt5" class="stage-btn">反方准备 (2')</button>
+            <button id="bt4" class="stage-btn">反方提问 (3')</button>
             <button id="bt6" class="stage-btn">反方报告 (3')</button>
             <button id="bt7" class="stage-btn">正反方讨论 (10')</button>
             <button id="bt8" class="stage-btn">评论方提问 (3')</button>
@@ -1071,11 +1067,9 @@
             });
 
             // 阶段按钮调用统一辅助函数
-            $("#bt1").click(function () { loadStage(1, 1, "选题环节"); });
-            $("#bt2").click(function () { loadStage(2, 2, "正方准备"); });
+            $("#bt2").click(function () { loadStage(2, 1, "准备环节"); });
             $("#bt3").click(function () { loadStage(3, 12, "正方报告"); });
-            $("#bt4").click(function () { loadStage(4, 2, "反方提问"); });
-            $("#bt5").click(function () { loadStage(5, 2, "反方准备"); });
+            $("#bt4").click(function () { loadStage(4, 3, "反方提问"); });
             $("#bt6").click(function () { loadStage(6, 3, "反方报告"); });
             $("#bt7").click(function () { loadStage(7, 10, "正反方讨论"); });
             $("#bt8").click(function () { loadStage(8, 3, "评论方提问"); });
@@ -1088,8 +1082,13 @@
             // 彻底去除 Eval 的安全执行方式
             $("#next").click(function () {
                 var num1 = num + 1;
-                if (num1 > 13) { num1 -= 13; }
-                document.getElementById("bt" + num1).click();
+                // 循环查找下一个存在的按钮，支持移除/合并按钮的情况
+                for (var i = 0; i < 13; i++) {
+                    if (num1 > 13) num1 = 1;
+                    var el = document.getElementById("bt" + num1);
+                    if (el) { el.click(); break; }
+                    num1++;
+                }
             });
 
             $("#recover").click(function () {
